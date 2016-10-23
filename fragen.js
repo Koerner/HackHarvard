@@ -33,7 +33,6 @@ var questions = [
             "Personalausweis"
         ]
     },
-];
 
 {
         "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">SUITCASE</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
