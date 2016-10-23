@@ -24,7 +24,7 @@ var questions = [
 
 
     {
-        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">PASSPORT</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"pæspɔ:rt\">PASSPORT</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
             "Reisepass",
             "Buch",
             "Heft",
@@ -35,7 +35,7 @@ var questions = [
     },
 
 {
-        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">SUITCASE</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"su:tkeɪs\">SUITCASE</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
             "Koffer",
             "Sack",
             "Tasche",
@@ -46,7 +46,7 @@ var questions = [
     },
 
     {
-        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">GUIDEBOOK</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+        "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"gaɪdbʊk\">GUIDEBOOK</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
             "Reiseführer",
             "Taschenbuch",
             "Notizbuch",
@@ -55,3 +55,6 @@ var questions = [
             "Schulbuch"
         ]
     },
+
+
+];

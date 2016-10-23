@@ -1,8 +1,12 @@
 /**
+ Project of HackHarvard | 36h Hackathon
+
  "Vokabel Trainer" (English / German) for Amazon Echo.
  Alexa will ask you words in English and validates you answer.
 
- Project of HackHarvard | 36h Hackathon
+ There are two version: multiple choice and say the answer without any hint.
+
+ This is set to the free text version
 
  Based on the Amazon 60 minute example
  */
@@ -14,68 +18,76 @@
 
 'use strict';
 
+var words = 5;
+
 /**
  * dictionary of words and the german expression.
  * Pay attention to the Speech Synthesis Markup Language (SSML):
  * https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference
  */
-var questions = [
-  {
-      "<phoneme alphabet=\"ipa\" ph=\"wɒt\">WHAT</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"ɪz\">IS</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"ði:\">THE</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"ˈʤɜ:mən\">GERMAN</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"wɜ:d\">WORD</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"fɔ:ʳ\">FOR</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"pleɪn\">PLANE</phoneme><break time=\"0.5s\"/>": [
-          "Flugzeug",
-          "Fahrrad",
-          "Zug",
-          "Kutsche",
-          "Auto",
-          "Schiff"
-      ]
-  },
 
-  {
-      "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">BEACH</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
-          "Strand",
-          "Wald",
-          "Wiese",
-          "Berge",
-          "Vulkan",
-          "See"
-      ]
-  },
+ var questions = [
+     {
+         "<phoneme alphabet=\"ipa\" ph=\"wɒt\">WHAT</phoneme><break time=\"0.1s\"/><phoneme alphabet=\"ipa\" ph=\"ɪz\">IS</phoneme><break time=\"0.1s\"/><phoneme alphabet=\"ipa\" ph=\"ði:\">THE</phoneme><break time=\"0.1s\"/><phoneme alphabet=\"ipa\" ph=\"ˈʤɜ:mən\">GERMAN</phoneme><break time=\"0.1s\"/><phoneme alphabet=\"ipa\" ph=\"wɜ:d\">WORD</phoneme><break time=\"0.1s\"/><phoneme alphabet=\"ipa\" ph=\"fɔ:ʳ\">FOR</phoneme><break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"pleɪn\">PLANE</phoneme><break time=\"0.1s\"/>": [
+             "Flugzeug",
+             "Fahrrad",
+             "Zug",
+             "Kutsche",
+             "Auto",
+             "Schiff"
+         ]
+     },
 
-  {
-      "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">PASSPORT</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
-          "Reisepass",
-          "Buch",
-          "Heft",
-          "Notizen",
-          "Zettel",
-          "Personalausweis"
-      ]
-  },
+     {
+         "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">BEACH</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+             "Strand",
+             "Wald",
+             "Wiese",
+             "Berge",
+             "Vulkan",
+             "See"
+         ]
+     },
 
-  {
-          "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">SUITCASE</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
-              "Koffer",
-              "Sack",
-              "Tasche",
-              "Rucksack",
-              "Seesack",
-              "Truhe"
-          ]
-      },
 
-      {
-          "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"bi:tʃ\">GUIDEBOOK</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
-              "Reiseführer",
-              "Taschenbuch",
-              "Notizbuch",
-              "Kochbuch",
-              "Schmonzette",
-              "Schulbuch"
-          ]
-      },
+     {
+         "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"pæspɔ:rt\">PASSPORT</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+             "Reisepass",
+             "Buch",
+             "Heft",
+             "Notizen",
+             "Zettel",
+             "Personalausweis"
+         ]
+     },
+
+ {
+         "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"su:tkeɪs\">SUITCASE</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+             "Koffer",
+             "Sack",
+             "Tasche",
+             "Rucksack",
+             "Seesack",
+             "Truhe"
+         ]
+     },
+
+     {
+         "Was heißt <break time=\"0.5s\"/><phoneme alphabet=\"ipa\" ph=\"gaɪdbʊk\">GUIDEBOOK</phoneme><break time=\"0.5s\"/> auf Deutsch?": [
+             "Reiseführer",
+             "Taschenbuch",
+             "Notizbuch",
+             "Kochbuch",
+             "Schmonzette",
+             "Schulbuch"
+         ]
+     },
 
 ];
+
+var welcome = "<phoneme alphabet=\"ipa\" ph=\"haɪ! . ðɪs . ɪz . ju . əˈlɛksə . ɛˈneɪbəld . ˈʤɜrmən . ˈtreɪnər . . aɪ . wɪl . æsk . ju . \">-</phoneme>" + words + "<phoneme alphabet=\"ipa\" ph=\" . wɜrdz . ænd . jul . rɪˈspɑnd . wɪð ðə raɪt . ˈʤɜrmən wɜrd.\">-</phoneme>"
+    + "<phoneme alphabet=\"ipa\" ph=\"fɔr . ɪgˈzæmpəl . \">-</phoneme>, Haus <break time=\"0.5s\"/>"
+    + "<phoneme alphabet=\"ipa\" ph=\"tu gɛt ə hɪnt ʤʌst seɪ \">-</phoneme>. Wiederholen. <break time=\"0.5s\"/>";
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
@@ -199,13 +211,12 @@ function onSessionEnded(sessionEndedRequest, session) {
 //Keep 0, when you use the open question mode, change to 4 if you want to use multible choice
 var ANSWER_COUNT = 0;
 // Change to dictionary length
-var GAME_LENGTH = 1;
+var GAME_LENGTH = words;
 var CARD_TITLE = "HackHarvard";
 
 function getWelcomeResponse(callback) {
     var sessionAttributes = {},
-        speechOutput = "I will ask you " + GAME_LENGTH.toString()
-            + " questions, try to get as many right as you can. Just say the number of the answer. Let's begin. ",
+        speechOutput = welcome,
         shouldEndSession = false,
 
         gameQuestions = populateGameQuestions(),
@@ -214,13 +225,14 @@ function getWelcomeResponse(callback) {
 
         currentQuestionIndex = 0,
         spokenQuestion = Object.keys(questions[gameQuestions[currentQuestionIndex]])[0],
-        repromptText = "1. Wort " + spokenQuestion + " ",
+        repromptText = "1. Frage " + spokenQuestion + " ",
 
         i, j;
+        var repromptText2 = "";
 
     for (i = 0; i < ANSWER_COUNT; i++)
     {
-        repromptText += (i+1).toString() + ". " + roundAnswers[i] + ". "
+        repromptText2 = "<break time=\"0.5s\"/>" + roundAnswers[i] + ". "
     }
 
     speechOutput += repromptText;
@@ -244,7 +256,7 @@ function populateGameQuestions() {
     var index = questions.length;
 
     if (GAME_LENGTH > index){
-        throw "Invalid Game Length.";
+        throw "Error. Invalid Game Length.";
     }
 
     for (var i = 0; i < questions.length; i++){
@@ -276,7 +288,7 @@ function populateRoundAnswers(gameQuestionIndexes, correctAnswerIndex, correctAn
     var index = answersCopy.length;
 
     if (index < ANSWER_COUNT){
-        throw "Not enough answers for question.";
+        throw "Error. Not enough answers for question.";
     }
 
     // Shuffle the answers, excluding the first element.
@@ -310,18 +322,18 @@ function handleAnswerRequest(intent, session, callback) {
         // If the user responded with an answer but there is no game in progress, ask the user
         // if they want to start a new game. Set a flag to track that we've prompted the user.
         sessionAttributes.userPromptedToContinue = true;
-        speechOutput = "There is no active session. Do you want to start a new one? ";
+        speechOutput = "<phoneme alphabet=\"ipa\" ph=\"ðɛr ɪz noʊ ˈæktɪv ˈsɛʃən. du ju wɑnt tu stɑrt ə nu wʌn? ʤʌst seɪ:\">-</phoneme>. Ja!";
         callback(sessionAttributes,
             buildSpeechletResponse(CARD_TITLE, speechOutput, speechOutput, false));
     }
     /**else if (!answerSlotValid && !userGaveUp) {
-    *  // If the user provided answer isn't a number > 0 and < ANSWER_COUNT,
-    *  // return an error message to the user. Remember to guide the user into providing correct values.
-    *  var reprompt = session.attributes.speechOutput;
-    *  var speechOutput = "Your answer must be a number between 1 and " + ANSWER_COUNT + ". " + reprompt;
-    *  callback(session.attributes,
-    *      buildSpeechletResponse(CARD_TITLE, speechOutput, reprompt, false));
-    *}
+      // If the user provided answer isn't a number > 0 and < ANSWER_COUNT,
+      // return an error message to the user. Remember to guide the user into providing correct values.
+      var reprompt = session.attributes.speechOutput;
+      var speechOutput = "leider falsch. <phoneme alphabet=\"ipa\" ph=\"ðə kəˈrɛkt ˈænsər wʊd hæv bɪn :  \">-</phoneme>"  + session.attributes.correctAnswerText + ". ";
+      callback(session.attributes,
+          buildSpeechletResponse(CARD_TITLE, speechOutput, reprompt, false));
+    }
     **/
     else {
 
@@ -345,13 +357,13 @@ function handleAnswerRequest(intent, session, callback) {
             if (!userGaveUp) {
                 speechOutputAnalysis = "leider falsch. "
             }
-            speechOutputAnalysis += "The correct answer is : "  + correctAnswerText + ". ";
+            speechOutputAnalysis += "<phoneme alphabet=\"ipa\" ph=\"ðə kəˈrɛkt ˈænsər wʊd hæv bɪn :  \">-</phoneme>"  + correctAnswerText + ". ";
         }
         // if currentQuestionIndex is #max-1, we've reached #max of questions (zero-indexed) and can exit the game session
         if (currentQuestionIndex == GAME_LENGTH - 1) {
             speechOutput = userGaveUp ? "" : "Die Antwort ist ";
-            speechOutput += speechOutputAnalysis + "You got " + currentScore.toString() + " out of "
-                + GAME_LENGTH.toString() + " questions correct. Thank you for playing!";
+            speechOutput += speechOutputAnalysis + "<phoneme alphabet=\"ipa\" ph=\"ju gɑt\">-</phoneme> " + currentScore.toString() + " out of "
+                + GAME_LENGTH.toString() + "<phoneme alphabet=\"ipa\" ph=\"ˈkwɛsʧənz kəˈrɛkt. θæŋk ju fɔr ˈpleɪɪŋ! \">-</phoneme>    ";
             callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, speechOutput, "", true));
         } else {
@@ -362,12 +374,10 @@ function handleAnswerRequest(intent, session, callback) {
             var roundAnswers = populateRoundAnswers(gameQuestions, currentQuestionIndex, correctAnswerIndex),
 
                 questionIndexForSpeech = currentQuestionIndex + 1,
-                repromptText = "Question " + questionIndexForSpeech.toString() + ". " + spokenQuestion + " ";
-            for (var i = 0; i < ANSWER_COUNT; i++) {
-                repromptText += (i+1).toString() + ". " + roundAnswers[i] + ". "
-            }
-            speechOutput += userGaveUp ? "" : "That answer is ";
-            speechOutput += speechOutputAnalysis + "Your score is " + currentScore.toString() + ". " + repromptText;
+                repromptText = "<break time=\"0.5s\"/> Frage" + questionIndexForSpeech.toString() + "<break time=\"0.1s\"/>. " + spokenQuestion + " ";
+
+            speechOutput += userGaveUp ? "" : "Die Antwort ist ";
+            speechOutput += speechOutputAnalysis + "Dein score ist " + currentScore.toString() + ". " + repromptText;
 
             sessionAttributes = {
                 "speechOutput": repromptText,
@@ -410,10 +420,7 @@ function handleGetHelpRequest(intent, session, callback) {
 
     // Do not edit the help dialogue. This has been created by the Alexa team to demonstrate best practices.
 
-    var speechOutput = "I will ask you " + GAME_LENGTH + " multiple choice questions. Respond with the number of the answer. "
-        + "For example, say one, two, three, or four. To start a new game at any time, say, start game. "
-        + "To repeat the last question, say, repeat. "
-        + "Would you like to keep playing?",
+    var speechOutput = welcome,
         repromptText = "To give an answer to a question, respond with the number of the answer . "
         + "Would you like to keep playing?";
         var shouldEndSession = false;
