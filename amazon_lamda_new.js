@@ -338,7 +338,7 @@ function handleAnswerRequest(intent, session, callback) {
 
         var speechOutputAnalysis = "";
 
-        if (intent.slots.Answer.value == correctAnswerIndex) {
+        if (intent.slots.Answer.value == correctAnswerText) {
             currentScore++;
             speechOutputAnalysis = "richtig! ";
         } else {
